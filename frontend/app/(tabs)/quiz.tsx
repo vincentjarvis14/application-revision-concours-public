@@ -14,37 +14,101 @@ interface Question {
   question: string;
   options: string[];
   correctAnswer: number;
+  explanation: string;
+  fiche: string;
 }
 
+// Quiz basé sur le contenu réel du concours d'attaché territorial
 const quizData: Question[] = [
   {
     id: 1,
-    question: 'Quel mot-clé déclare une variable constante en JavaScript?',
-    options: ['var', 'let', 'const', 'define'],
-    correctAnswer: 2,
+    question: 'Quelle est la durée de validité d\'un permis de construire ?',
+    options: ['1 an', '2 ans', '3 ans', '5 ans'],
+    correctAnswer: 1,
+    explanation: 'Le permis de construire a une validité de 2 ans à compter de sa délivrance. Il devient caduc si les travaux ne sont pas entrepris dans ce délai.',
+    fiche: 'Fiche 105 - Le permis de construire',
   },
   {
     id: 2,
-    question: 'Quel est le résultat de typeof null?',
-    options: ['null', 'undefined', 'object', 'boolean'],
-    correctAnswer: 2,
+    question: 'Quel est le délai d\'instruction d\'un permis de construire pour une maison individuelle ?',
+    options: ['1 mois', '2 mois', '3 mois', '4 mois'],
+    correctAnswer: 1,
+    explanation: 'Le délai d\'instruction de droit commun est de 2 mois pour une maison individuelle. Ce délai peut être majoré dans certains cas (secteur sauvegardé, consultation de commissions...).',
+    fiche: 'Fiche 105 - Le permis de construire',
   },
   {
     id: 3,
-    question: 'Quelle méthode ajoute un élément à la fin d\'un tableau?',
-    options: ['push()', 'pop()', 'shift()', 'unshift()'],
-    correctAnswer: 0,
+    question: 'À partir de quelle surface de plancher créée un permis de construire est-il obligatoire (hors zone urbaine PLU) ?',
+    options: ['10 m²', '20 m²', '40 m²', '100 m²'],
+    correctAnswer: 1,
+    explanation: 'Un permis de construire est obligatoire pour toute création de surface de plancher ou emprise au sol supérieure à 20 m². En zone urbaine d\'un PLU, ce seuil est porté à 40 m².',
+    fiche: 'Fiche 105 - Le permis de construire',
   },
   {
     id: 4,
-    question: "Qu'est-ce qu'une Promise en JavaScript?",
+    question: 'Quelle est la durée de validité d\'un certificat d\'urbanisme pré-opérationnel ?',
+    options: ['6 mois', '12 mois', '18 mois', '24 mois'],
+    correctAnswer: 2,
+    explanation: 'Le certificat d\'urbanisme pré-opérationnel (type b) a une validité de 18 mois. Il peut être prorogé par périodes d\'un an.',
+    fiche: 'Fiche 102 - Le certificat d\'urbanisme',
+  },
+  {
+    id: 5,
+    question: 'Quels sont les trois documents composant un SCOT ?',
     options: [
-      'Une fonction synchrone',
-      'Un objet représentant une valeur future',
-      'Une variable globale',
-      'Une méthode de tableau',
+      'PLU, carte communale, RNU',
+      'Rapport de présentation, PADD, DOO',
+      'Enquête publique, avis, décision',
+      'Diagnostic, objectifs, règlement',
     ],
     correctAnswer: 1,
+    explanation: 'Le SCOT comprend : le Rapport de présentation, le PADD (Projet d\'Aménagement et de Développement Durables) et le DOO (Document d\'Orientation et d\'Objectifs).',
+    fiche: 'Fiche 99 - Le SCOT',
+  },
+  {
+    id: 6,
+    question: 'Quelle est la largeur de la bande littorale inconstructible selon la loi Littoral ?',
+    options: ['50 mètres', '100 mètres', '200 mètres', '300 mètres'],
+    correctAnswer: 1,
+    explanation: 'La bande littorale inconstructible est de 100 mètres à compter de la limite haute du rivage, hors espaces urbanisés. Le PLU peut élargir cette bande.',
+    fiche: 'Fiche 100 - La loi Littoral',
+  },
+  {
+    id: 7,
+    question: 'Quel est le principe fondamental d\'urbanisation en zone montagne ?',
+    options: [
+      'Construction libre partout',
+      'Urbanisation en continuité des bourgs existants',
+      'Interdiction totale de construire',
+      'Construction uniquement en vallée',
+    ],
+    correctAnswer: 1,
+    explanation: 'En zone montagne, l\'urbanisation doit être réalisée en continuité des bourgs, villages, hameaux ou groupes de constructions traditionnelles existants.',
+    fiche: 'Fiche 101 - La loi Montagne',
+  },
+  {
+    id: 8,
+    question: 'Tous les combien un SCOT doit-il faire l\'objet d\'une analyse de ses résultats ?',
+    options: ['3 ans', '6 ans', '9 ans', '12 ans'],
+    correctAnswer: 1,
+    explanation: 'Le SCOT doit faire l\'objet d\'une analyse de ses résultats au maximum 6 ans après son approbation, sa révision complète ou son maintien en vigueur.',
+    fiche: 'Fiche 99 - Le SCOT',
+  },
+  {
+    id: 9,
+    question: 'Quel délai le maire dispose-t-il pour contester la conformité des travaux après réception de la déclaration d\'achèvement ?',
+    options: ['1 mois', '2 mois', '3 mois', '6 mois'],
+    correctAnswer: 2,
+    explanation: 'Le maire ou le préfet dispose d\'un délai de 3 mois à compter de la réception de la déclaration d\'achèvement pour contester la conformité des travaux.',
+    fiche: 'Fiche 105 - Le permis de construire',
+  },
+  {
+    id: 10,
+    question: 'Quelle est la durée maximale d\'un sursis à statuer opposé à une demande de permis de construire ?',
+    options: ['6 mois', '1 an', '2 ans', '3 ans'],
+    correctAnswer: 2,
+    explanation: 'Le sursis à statuer a une validité maximale de 2 ans. Après expiration, le demandeur a 2 mois pour confirmer sa demande, et l\'autorité doit se prononcer définitivement.',
+    fiche: 'Fiche 105 - Le permis de construire',
   },
 ];
 
@@ -87,62 +151,58 @@ export default function QuizScreen() {
 
   const getOptionStyle = (index: number) => {
     if (!showResult) {
-      return selectedAnswer === index
-        ? styles.optionSelected
-        : styles.option;
+      return selectedAnswer === index ? styles.optionSelected : styles.option;
     }
-
     if (index === question.correctAnswer) {
       return styles.optionCorrect;
     }
-
     if (index === selectedAnswer && index !== question.correctAnswer) {
       return styles.optionWrong;
     }
-
     return styles.option;
   };
 
   const getOptionTextStyle = (index: number) => {
     if (!showResult) {
-      return selectedAnswer === index
-        ? styles.optionTextSelected
-        : styles.optionText;
+      return selectedAnswer === index ? styles.optionTextSelected : styles.optionText;
     }
-
     if (index === question.correctAnswer) {
       return styles.optionTextCorrect;
     }
-
     if (index === selectedAnswer && index !== question.correctAnswer) {
       return styles.optionTextWrong;
     }
-
     return styles.optionText;
   };
 
   if (quizCompleted) {
     const percentage = Math.round((score / quizData.length) * 100);
+    const getMessage = () => {
+      if (percentage >= 80) return { text: 'Excellent !', icon: 'trophy' as const };
+      if (percentage >= 60) return { text: 'Bien joué !', icon: 'thumbs-up' as const };
+      if (percentage >= 40) return { text: 'Continuez !', icon: 'fitness' as const };
+      return { text: 'À réviser !', icon: 'book' as const };
+    };
+    const message = getMessage();
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Quiz</Text>
+          <Text style={styles.headerTitle}>Quiz Urbanisme</Text>
         </View>
 
         <View style={styles.resultContainer}>
           <View style={styles.resultCard}>
             <Ionicons
-              name={percentage >= 70 ? 'trophy' : 'refresh-circle'}
+              name={message.icon}
               size={80}
-              color={percentage >= 70 ? '#F59E0B' : '#6366F1'}
+              color={percentage >= 60 ? '#F59E0B' : '#6366F1'}
             />
-            <Text style={styles.resultTitle}>
-              {percentage >= 70 ? 'Félicitations!' : 'Continuez à pratiquer!'}
-            </Text>
+            <Text style={styles.resultTitle}>{message.text}</Text>
             <Text style={styles.resultScore}>
               {score} / {quizData.length}
             </Text>
-            <Text style={styles.resultPercentage}>{percentage}% correct</Text>
+            <Text style={styles.resultPercentage}>{percentage}% de réussite</Text>
 
             <View style={styles.resultStats}>
               <View style={styles.resultStat}>
@@ -159,7 +219,7 @@ export default function QuizScreen() {
 
             <TouchableOpacity style={styles.restartButton} onPress={restartQuiz}>
               <Ionicons name="refresh" size={20} color="#FFFFFF" />
-              <Text style={styles.restartButtonText}>Recommencer le quiz</Text>
+              <Text style={styles.restartButtonText}>Recommencer</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -171,21 +231,20 @@ export default function QuizScreen() {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Quiz</Text>
+        <Text style={styles.headerTitle}>Quiz Urbanisme</Text>
         <View style={styles.scoreBadge}>
           <Ionicons name="star" size={16} color="#F59E0B" />
           <Text style={styles.scoreText}>{score} pts</Text>
         </View>
       </View>
 
-      <ScrollView
-        style={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Progress */}
         <View style={styles.progressContainer}>
           <View style={styles.progressHeader}>
-            <Text style={styles.progressLabel}>Question {currentQuestion + 1}/{quizData.length}</Text>
+            <Text style={styles.progressLabel}>
+              Question {currentQuestion + 1}/{quizData.length}
+            </Text>
             <Text style={styles.progressPercent}>
               {Math.round(((currentQuestion + 1) / quizData.length) * 100)}%
             </Text>
@@ -194,12 +253,16 @@ export default function QuizScreen() {
             <View
               style={[
                 styles.progressFill,
-                {
-                  width: `${((currentQuestion + 1) / quizData.length) * 100}%`,
-                },
+                { width: `${((currentQuestion + 1) / quizData.length) * 100}%` },
               ]}
             />
           </View>
+        </View>
+
+        {/* Fiche reference */}
+        <View style={styles.ficheRefContainer}>
+          <Ionicons name="document-text" size={14} color="#9CA3AF" />
+          <Text style={styles.ficheRefText}>{question.fiche}</Text>
         </View>
 
         {/* Question Card */}
@@ -247,32 +310,14 @@ export default function QuizScreen() {
           ))}
         </View>
 
-        {/* Feedback */}
+        {/* Explanation */}
         {showResult && (
-          <View
-            style={[
-              styles.feedbackCard,
-              selectedAnswer === question.correctAnswer
-                ? styles.feedbackCorrect
-                : styles.feedbackWrong,
-            ]}
-          >
-            <Ionicons
-              name={
-                selectedAnswer === question.correctAnswer
-                  ? 'checkmark-circle'
-                  : 'information-circle'
-              }
-              size={24}
-              color={
-                selectedAnswer === question.correctAnswer ? '#10B981' : '#F59E0B'
-              }
-            />
-            <Text style={styles.feedbackText}>
-              {selectedAnswer === question.correctAnswer
-                ? 'Excellent ! Bonne réponse !'
-                : `La bonne réponse était : ${question.options[question.correctAnswer]}`}
-            </Text>
+          <View style={styles.explanationCard}>
+            <View style={styles.explanationHeader}>
+              <Ionicons name="information-circle" size={20} color="#6366F1" />
+              <Text style={styles.explanationTitle}>Explication</Text>
+            </View>
+            <Text style={styles.explanationText}>{question.explanation}</Text>
           </View>
         )}
 
@@ -330,7 +375,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   progressContainer: {
-    marginBottom: 24,
+    marginBottom: 16,
   },
   progressHeader: {
     flexDirection: 'row',
@@ -357,6 +402,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#6366F1',
     borderRadius: 3,
   },
+  ficheRefContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 16,
+  },
+  ficheRefText: {
+    color: '#9CA3AF',
+    fontSize: 12,
+  },
   questionCard: {
     backgroundColor: '#1F2937',
     borderRadius: 16,
@@ -374,10 +429,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   questionText: {
-    fontSize: 18,
+    fontSize: 17,
     color: '#FFFFFF',
     textAlign: 'center',
-    lineHeight: 28,
+    lineHeight: 26,
   },
   optionsContainer: {
     gap: 12,
@@ -436,50 +491,50 @@ const styles = StyleSheet.create({
   optionText: {
     flex: 1,
     color: '#D1D5DB',
-    fontSize: 16,
+    fontSize: 15,
   },
   optionTextSelected: {
     flex: 1,
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 15,
   },
   optionTextCorrect: {
     flex: 1,
     color: '#10B981',
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
   },
   optionTextWrong: {
     flex: 1,
     color: '#EF4444',
-    fontSize: 16,
+    fontSize: 15,
   },
   optionIcon: {
     marginLeft: 8,
   },
-  feedbackCard: {
+  explanationCard: {
+    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(99, 102, 241, 0.3)',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 24,
+  },
+  explanationHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 24,
-    gap: 12,
+    gap: 8,
+    marginBottom: 8,
   },
-  feedbackCorrect: {
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-    borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.3)',
+  explanationTitle: {
+    color: '#6366F1',
+    fontSize: 14,
+    fontWeight: '600',
   },
-  feedbackWrong: {
-    backgroundColor: 'rgba(245, 158, 11, 0.1)',
-    borderWidth: 1,
-    borderColor: 'rgba(245, 158, 11, 0.3)',
-  },
-  feedbackText: {
-    flex: 1,
+  explanationText: {
     color: '#D1D5DB',
     fontSize: 14,
-    lineHeight: 20,
+    lineHeight: 22,
   },
   nextButton: {
     flexDirection: 'row',

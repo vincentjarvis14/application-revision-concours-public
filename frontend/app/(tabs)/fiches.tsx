@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { themes } from '../../data';
 import { Fiche, ContentSection } from '../../data/types';
 
@@ -36,18 +37,18 @@ export default function FichesScreen() {
     </View>
   );
 
-  // Écran de lecture d'une fiche
+  // ÉCRAN DE LECTURE
   if (screen === 'read' && selectedFiche) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Pressable onPress={goBack} style={styles.backBtn} testID="back-from-read">
+          <TouchableOpacity onPress={goBack} style={styles.backBtn} testID="back-from-read">
             <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
-          </Pressable>
+          </TouchableOpacity>
           <View style={styles.headerCenter}>
             <Text style={styles.headerSmall} numberOfLines={1}>Fiche {selectedFiche.id}</Text>
           </View>
-          <View style={{ width: 40 }} />
+          <View style={{ width: 44 }} />
         </View>
         <ScrollView style={styles.readContent} showsVerticalScrollIndicator={false}>
           <View style={[styles.ficheHeaderCard, { borderColor: theme?.color || '#6366F1' }]}>
@@ -61,7 +62,7 @@ export default function FichesScreen() {
     );
   }
 
-  // Écran liste des fiches d'une section
+  // ÉCRAN LISTE DES FICHES D'UNE SECTION
   if (screen === 'fiches' && theme && selectedSection) {
     const section = theme.sections.find(s => s.name === selectedSection);
     const fiches = section?.fiches || [];
@@ -69,20 +70,21 @@ export default function FichesScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Pressable onPress={goBack} style={styles.backBtn} testID="back-from-fiches">
+          <TouchableOpacity onPress={goBack} style={styles.backBtn} testID="back-from-fiches">
             <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
-          </Pressable>
+          </TouchableOpacity>
           <View style={styles.headerCenter}>
             <Text style={styles.headerSmall} numberOfLines={1}>{selectedSection}</Text>
             <Text style={styles.headerSub}>{fiches.length} fiches</Text>
           </View>
-          <View style={{ width: 40 }} />
+          <View style={{ width: 44 }} />
         </View>
         <ScrollView style={styles.listContent} showsVerticalScrollIndicator={false}>
           {fiches.map(fiche => (
-            <Pressable
+            <TouchableOpacity
               key={fiche.id}
-              style={({ pressed }) => [styles.ficheCard, pressed && styles.ficheCardPressed]}
+              style={styles.ficheCard}
+              activeOpacity={0.6}
               onPress={() => openFiche(fiche)}
               testID={`fiche-item-${fiche.id}`}
             >
@@ -96,7 +98,7 @@ export default function FichesScreen() {
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color="#4B5563" />
-            </Pressable>
+            </TouchableOpacity>
           ))}
           <View style={{ height: 20 }} />
         </ScrollView>
@@ -104,19 +106,19 @@ export default function FichesScreen() {
     );
   }
 
-  // Écran liste des sections d'un thème
+  // ÉCRAN LISTE DES SECTIONS D'UN THÈME
   if (screen === 'sections' && theme) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Pressable onPress={goBack} style={styles.backBtn} testID="back-from-sections">
+          <TouchableOpacity onPress={goBack} style={styles.backBtn} testID="back-from-sections">
             <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
-          </Pressable>
+          </TouchableOpacity>
           <View style={styles.headerCenter}>
             <Text style={styles.headerSmall} numberOfLines={1}>{theme.title}</Text>
             <Text style={styles.headerSub}>{theme.subtitle}</Text>
           </View>
-          <View style={{ width: 40 }} />
+          <View style={{ width: 44 }} />
         </View>
         <ScrollView style={styles.listContent} showsVerticalScrollIndicator={false}>
           <View style={[styles.themeInfoBanner, { backgroundColor: `${theme.color}15`, borderColor: `${theme.color}40` }]}>
@@ -128,9 +130,10 @@ export default function FichesScreen() {
           </View>
 
           {theme.sections.map((section, idx) => (
-            <Pressable
+            <TouchableOpacity
               key={section.name}
-              style={({ pressed }) => [styles.sectionCard, pressed && styles.sectionCardPressed]}
+              style={styles.sectionCard}
+              activeOpacity={0.6}
               onPress={() => { setSelectedSection(section.name); setScreen('fiches'); }}
               testID={`section-item-${idx}`}
             >
@@ -144,7 +147,7 @@ export default function FichesScreen() {
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color="#4B5563" />
-            </Pressable>
+            </TouchableOpacity>
           ))}
           <View style={{ height: 20 }} />
         </ScrollView>
@@ -152,7 +155,7 @@ export default function FichesScreen() {
     );
   }
 
-  // Écran principal : liste des thèmes
+  // ÉCRAN PRINCIPAL : THÈMES
   const totalFiches = themes.reduce((acc, t) => acc + t.sections.reduce((a, s) => a + s.fiches.length, 0), 0);
 
   return (
@@ -172,9 +175,10 @@ export default function FichesScreen() {
         {themes.map(t => {
           const tFiches = t.sections.reduce((acc, s) => acc + s.fiches.length, 0);
           return (
-            <Pressable
+            <TouchableOpacity
               key={t.id}
-              style={({ pressed }) => [styles.themeCard, pressed && styles.themeCardPressed]}
+              style={styles.themeCard}
+              activeOpacity={0.6}
               onPress={() => { setSelectedTheme(t.id); setScreen('sections'); }}
               testID={`theme-${t.id}`}
             >
@@ -196,7 +200,7 @@ export default function FichesScreen() {
                 </View>
               </View>
               <Ionicons name="chevron-forward" size={24} color="#6B7280" />
-            </Pressable>
+            </TouchableOpacity>
           );
         })}
       </ScrollView>
@@ -216,9 +220,7 @@ const styles = StyleSheet.create({
   totalText: { color: '#9CA3AF', fontSize: 13, fontWeight: '600' },
   listContent: { flex: 1, paddingHorizontal: 20 },
   introText: { fontSize: 14, color: '#9CA3AF', lineHeight: 22, marginTop: 20, marginBottom: 24 },
-  // Theme cards
   themeCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#1F2937', borderRadius: 16, padding: 20, marginBottom: 16 },
-  themeCardPressed: { opacity: 0.7, backgroundColor: '#2D3748' },
   themeIconBox: { width: 64, height: 64, borderRadius: 16, justifyContent: 'center', alignItems: 'center', marginRight: 16 },
   themeCardContent: { flex: 1 },
   themeCardTitle: { fontSize: 17, fontWeight: 'bold', color: '#FFFFFF', marginBottom: 4 },
@@ -226,27 +228,21 @@ const styles = StyleSheet.create({
   themeCardStats: { flexDirection: 'row', gap: 16 },
   statItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   statText: { fontSize: 12, color: '#9CA3AF' },
-  // Theme info banner
   themeInfoBanner: { borderRadius: 16, padding: 24, marginTop: 16, marginBottom: 24, alignItems: 'center', borderWidth: 1 },
   themeInfoTitle: { fontSize: 18, fontWeight: 'bold', color: '#FFFFFF', marginTop: 12 },
   themeInfoSub: { fontSize: 13, color: '#9CA3AF', marginTop: 4 },
-  // Section cards
   sectionCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#1F2937', borderRadius: 12, padding: 16, marginBottom: 10, minHeight: 60 },
-  sectionCardPressed: { opacity: 0.7, backgroundColor: '#2D3748' },
   sectionNum: { width: 36, height: 36, borderRadius: 10, justifyContent: 'center', alignItems: 'center', marginRight: 14 },
   sectionNumText: { color: '#FFFFFF', fontSize: 14, fontWeight: 'bold' },
   sectionCardInfo: { flex: 1 },
   sectionCardTitle: { fontSize: 15, fontWeight: '600', color: '#FFFFFF', marginBottom: 2 },
   sectionCardCount: { fontSize: 12, color: '#6B7280' },
-  // Fiche cards
   ficheCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#1F2937', borderRadius: 12, padding: 16, marginBottom: 10, minHeight: 64 },
-  ficheCardPressed: { opacity: 0.7, backgroundColor: '#2D3748' },
   ficheNumBadge: { width: 42, height: 42, borderRadius: 10, justifyContent: 'center', alignItems: 'center', marginRight: 14 },
   ficheNumText: { fontSize: 14, fontWeight: 'bold' },
   ficheCardInfo: { flex: 1 },
   ficheCardTitle: { fontSize: 14, fontWeight: '600', color: '#FFFFFF', lineHeight: 20, marginBottom: 2 },
   ficheCardSub: { fontSize: 12, color: '#6B7280' },
-  // Reading styles
   readContent: { flex: 1, paddingHorizontal: 20 },
   ficheHeaderCard: { backgroundColor: '#1F2937', borderRadius: 16, padding: 24, marginTop: 16, marginBottom: 24, borderLeftWidth: 4 },
   ficheNumber: { fontSize: 13, color: '#9CA3AF', fontWeight: '600', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 },

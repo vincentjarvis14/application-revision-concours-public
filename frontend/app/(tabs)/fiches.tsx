@@ -1,8 +1,7 @@
-import React, { useState, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
 import { themes } from '../../data';
 import { Fiche, ContentSection } from '../../data/types';
 
@@ -13,7 +12,6 @@ export default function FichesScreen() {
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
   const [selectedFiche, setSelectedFiche] = useState<Fiche | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
 
   const theme = themes.find(t => t.id === selectedTheme);
 
@@ -21,6 +19,11 @@ export default function FichesScreen() {
     if (screen === 'read') setScreen('fiches');
     else if (screen === 'fiches') setScreen('sections');
     else if (screen === 'sections') setScreen('themes');
+  };
+
+  const openFiche = (fiche: Fiche) => {
+    setSelectedFiche(fiche);
+    setScreen('read');
   };
 
   const renderSection = (section: ContentSection, depth: number = 0) => (
@@ -38,9 +41,9 @@ export default function FichesScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={goBack} style={styles.backBtn} testID="back-from-read">
+          <Pressable onPress={goBack} style={styles.backBtn} testID="back-from-read">
             <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
-          </TouchableOpacity>
+          </Pressable>
           <View style={styles.headerCenter}>
             <Text style={styles.headerSmall} numberOfLines={1}>Fiche {selectedFiche.id}</Text>
           </View>
@@ -66,9 +69,9 @@ export default function FichesScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={goBack} style={styles.backBtn} testID="back-from-fiches">
+          <Pressable onPress={goBack} style={styles.backBtn} testID="back-from-fiches">
             <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
-          </TouchableOpacity>
+          </Pressable>
           <View style={styles.headerCenter}>
             <Text style={styles.headerSmall} numberOfLines={1}>{selectedSection}</Text>
             <Text style={styles.headerSub}>{fiches.length} fiches</Text>
@@ -77,10 +80,10 @@ export default function FichesScreen() {
         </View>
         <ScrollView style={styles.listContent} showsVerticalScrollIndicator={false}>
           {fiches.map(fiche => (
-            <TouchableOpacity
+            <Pressable
               key={fiche.id}
-              style={styles.ficheCard}
-              onPress={() => { setSelectedFiche(fiche); setScreen('read'); }}
+              style={({ pressed }) => [styles.ficheCard, pressed && styles.ficheCardPressed]}
+              onPress={() => openFiche(fiche)}
               testID={`fiche-item-${fiche.id}`}
             >
               <View style={[styles.ficheNumBadge, { backgroundColor: `${theme.color}20` }]}>
@@ -93,7 +96,7 @@ export default function FichesScreen() {
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color="#4B5563" />
-            </TouchableOpacity>
+            </Pressable>
           ))}
           <View style={{ height: 20 }} />
         </ScrollView>
@@ -106,9 +109,9 @@ export default function FichesScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={goBack} style={styles.backBtn} testID="back-from-sections">
+          <Pressable onPress={goBack} style={styles.backBtn} testID="back-from-sections">
             <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
-          </TouchableOpacity>
+          </Pressable>
           <View style={styles.headerCenter}>
             <Text style={styles.headerSmall} numberOfLines={1}>{theme.title}</Text>
             <Text style={styles.headerSub}>{theme.subtitle}</Text>
@@ -125,9 +128,9 @@ export default function FichesScreen() {
           </View>
 
           {theme.sections.map((section, idx) => (
-            <TouchableOpacity
+            <Pressable
               key={section.name}
-              style={styles.sectionCard}
+              style={({ pressed }) => [styles.sectionCard, pressed && styles.sectionCardPressed]}
               onPress={() => { setSelectedSection(section.name); setScreen('fiches'); }}
               testID={`section-item-${idx}`}
             >
@@ -141,7 +144,7 @@ export default function FichesScreen() {
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color="#4B5563" />
-            </TouchableOpacity>
+            </Pressable>
           ))}
           <View style={{ height: 20 }} />
         </ScrollView>
@@ -169,9 +172,9 @@ export default function FichesScreen() {
         {themes.map(t => {
           const tFiches = t.sections.reduce((acc, s) => acc + s.fiches.length, 0);
           return (
-            <TouchableOpacity
+            <Pressable
               key={t.id}
-              style={styles.themeCard}
+              style={({ pressed }) => [styles.themeCard, pressed && styles.themeCardPressed]}
               onPress={() => { setSelectedTheme(t.id); setScreen('sections'); }}
               testID={`theme-${t.id}`}
             >
@@ -193,7 +196,7 @@ export default function FichesScreen() {
                 </View>
               </View>
               <Ionicons name="chevron-forward" size={24} color="#6B7280" />
-            </TouchableOpacity>
+            </Pressable>
           );
         })}
       </ScrollView>
@@ -208,12 +211,14 @@ const styles = StyleSheet.create({
   headerSmall: { fontSize: 16, fontWeight: 'bold', color: '#FFFFFF' },
   headerSub: { fontSize: 12, color: '#9CA3AF', marginTop: 2 },
   headerCenter: { flex: 1, marginHorizontal: 12 },
-  backBtn: { width: 40, height: 40, justifyContent: 'center', alignItems: 'center' },
+  backBtn: { width: 44, height: 44, justifyContent: 'center', alignItems: 'center' },
   totalBadge: { backgroundColor: '#1F2937', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 16 },
   totalText: { color: '#9CA3AF', fontSize: 13, fontWeight: '600' },
   listContent: { flex: 1, paddingHorizontal: 20 },
   introText: { fontSize: 14, color: '#9CA3AF', lineHeight: 22, marginTop: 20, marginBottom: 24 },
+  // Theme cards
   themeCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#1F2937', borderRadius: 16, padding: 20, marginBottom: 16 },
+  themeCardPressed: { opacity: 0.7, backgroundColor: '#2D3748' },
   themeIconBox: { width: 64, height: 64, borderRadius: 16, justifyContent: 'center', alignItems: 'center', marginRight: 16 },
   themeCardContent: { flex: 1 },
   themeCardTitle: { fontSize: 17, fontWeight: 'bold', color: '#FFFFFF', marginBottom: 4 },
@@ -221,16 +226,21 @@ const styles = StyleSheet.create({
   themeCardStats: { flexDirection: 'row', gap: 16 },
   statItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   statText: { fontSize: 12, color: '#9CA3AF' },
+  // Theme info banner
   themeInfoBanner: { borderRadius: 16, padding: 24, marginTop: 16, marginBottom: 24, alignItems: 'center', borderWidth: 1 },
   themeInfoTitle: { fontSize: 18, fontWeight: 'bold', color: '#FFFFFF', marginTop: 12 },
   themeInfoSub: { fontSize: 13, color: '#9CA3AF', marginTop: 4 },
-  sectionCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#1F2937', borderRadius: 12, padding: 16, marginBottom: 10 },
+  // Section cards
+  sectionCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#1F2937', borderRadius: 12, padding: 16, marginBottom: 10, minHeight: 60 },
+  sectionCardPressed: { opacity: 0.7, backgroundColor: '#2D3748' },
   sectionNum: { width: 36, height: 36, borderRadius: 10, justifyContent: 'center', alignItems: 'center', marginRight: 14 },
   sectionNumText: { color: '#FFFFFF', fontSize: 14, fontWeight: 'bold' },
   sectionCardInfo: { flex: 1 },
   sectionCardTitle: { fontSize: 15, fontWeight: '600', color: '#FFFFFF', marginBottom: 2 },
   sectionCardCount: { fontSize: 12, color: '#6B7280' },
-  ficheCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#1F2937', borderRadius: 12, padding: 16, marginBottom: 10 },
+  // Fiche cards
+  ficheCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#1F2937', borderRadius: 12, padding: 16, marginBottom: 10, minHeight: 64 },
+  ficheCardPressed: { opacity: 0.7, backgroundColor: '#2D3748' },
   ficheNumBadge: { width: 42, height: 42, borderRadius: 10, justifyContent: 'center', alignItems: 'center', marginRight: 14 },
   ficheNumText: { fontSize: 14, fontWeight: 'bold' },
   ficheCardInfo: { flex: 1 },

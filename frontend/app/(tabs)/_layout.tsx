@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export default function TabLayout() {
   return (
@@ -20,6 +20,15 @@ export default function TabLayout() {
           title: 'Accueil',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="fiches"
+        options={{
+          title: 'Fiches',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="reader" size={size} color={color} />
           ),
         }}
       />
@@ -55,7 +64,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   tabBarLabel: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '600',
   },
 });

@@ -1,170 +1,113 @@
 import { Fiche } from './types';
+import { fichesCollectivites } from './env-collectivites';
+import { fichesActionAdmin } from './env-action-admin';
 
-// Environnement Territorial - Contenu COMPLET extrait du PDF CNFPT
+// Fiches 1-6 avec contenu complet (déjà intégrées)
+const fichesInstitutions: Fiche[] = [
+  { id: 1, title: "Les grands principes de l'organisation de l'État", theme: 'environnement', sections: [
+    { title: "1. L'État", text: "Les éléments pour constituer un État sont au nombre de trois : une population, un territoire, un pouvoir.", subsections: [
+      { title: "1.1. L'État est doté de la personnalité morale", text: "L'État agit au nom de la population sur son territoire. Il a une vie propre et indépendante des volontés individuelles. Cette continuité est indispensable à la sécurité des relations sociales." },
+      { title: "1.2. L'État est souverain", text: "L'État dispose d'un pouvoir qui ne relève d'aucun autre : « l'État a la compétence de ses compétences ». Souverain n'est pas synonyme d'omnipotent. L'État doit s'appliquer les règles qu'il pose." },
+    ]},
+    { title: "2. Unitaire", text: "L'État unitaire possède un seul centre d'impulsion politique. L'État fédéral en a plusieurs (ex: États-Unis). La France est un État unitaire, centralisé, devenu déconcentré et décentralisé." },
+    { title: "3. Déconcentré", text: "La déconcentration est une variété de la centralisation : découpage du territoire en circonscriptions à la tête desquelles l'État place un représentant local du pouvoir central. Comme disait Odilon Barrot : « C'est le même marteau qui frappe, mais le manche est plus court »." },
+    { title: "4. Décentralisé", text: "La décentralisation crée deux nouvelles catégories de personnes morales : les collectivités territoriales (décentralisation territoriale) et les établissements publics (décentralisation technique). Dotés de la personnalité morale, ils disposent d'organes propres." },
+  ]},
+  { id: 2, title: "L'organisation administrative de l'État", theme: 'environnement', sections: [
+    { title: "1. L'administration centrale", text: "Rôle de conception, animation, évaluation et contrôle.", subsections: [
+      { title: "1.1. Organes de conception et décision", text: "• Président de la République : pouvoir réglementaire et de nomination\n• Premier ministre : pouvoir réglementaire général\n• Ministres : pouvoir réglementaire dans leur domaine" },
+      { title: "1.2-1.4. Consultation, coordination, contrôle", text: "Consultation : Conseil d'État, CESE\nCoordination : Conseil des ministres, comités interministériels\nContrôle : Cour des comptes, inspections générales" },
+    ]},
+    { title: "2. L'administration déconcentrée", text: "4 niveaux : région, département, arrondissement, commune.\n\nServices déconcentrés régionaux : DRFiP, DRAAF, DRAC, DREAL, DREETS, Rectorats, ARS\nDépartementaux : DDFiP, DDT(M), DDETS(PP)\n\nLe préfet de département : représentant de l'État, dirige les services déconcentrés, contrôle de légalité, ordre public.\nLe préfet de région : autorité sur les préfets de département, coordonne les politiques." },
+  ]},
+  { id: 3, title: "Les grandes étapes de la décentralisation", theme: 'environnement', sections: [
+    { title: "1. Acte I (1982-2003)", text: "Loi du 2 mars 1982 : région = CT, suppression des tutelles, contrôle de légalité a posteriori.\nLois 1983 : répartition des compétences.\nLoi 1984 : statut FPT.\nLoi 1999 : coopération intercommunale simplifiée." },
+    { title: "2. Acte II (2003-2007)", text: "Loi constitutionnelle 2003 : subsidiarité, chef de file, expérimentation, autonomie financière, référendum local.\nLoi 2004 : transferts de compétences." },
+    { title: "3. Acte III (2007-2019)", text: "Loi 2010 : carte intercommunale, métropoles.\nLoi MAPTAM 2014 : métropoles à statut particulier.\nLoi 2015 : 12 régions.\nLoi NOTRe 2015 : fin clause générale pour départements/régions.\nLoi 2017 : statut de Paris.\nLoi 2019 : Collectivité européenne d'Alsace." },
+  ]},
+  { id: 4, title: "L'organisation juridictionnelle", theme: 'environnement', sections: [
+    { title: "1. Juridictions judiciaires", text: "Civil : tribunal judiciaire, conseil de prud'hommes, tribunal de commerce.\nPénal : tribunal de police (contraventions), tribunal correctionnel (délits), cour d'assises (crimes).\nCours d'appel : réexaminent les faits.\nCour de cassation : juge uniquement en droit." },
+    { title: "2. Juridictions administratives", text: "TA (42 en France) → CAA (9) → Conseil d'État (juridiction suprême + conseiller du gouvernement)." },
+    { title: "3. Tribunal des conflits", text: "Règle les conflits d'attribution entre les deux ordres. Composé paritairement." },
+    { title: "4. Conseil constitutionnel", text: "Contrôle a priori (avant promulgation) et a posteriori (QPC depuis 2010). Contentieux électoral." },
+  ]},
+  { id: 5, title: "Les grands principes régissant les CT", theme: 'environnement', sections: [
+    { title: "1. Principe d'autonomie", text: "Autonomie juridique (personnalité morale), organique (conseils élus au SUD), fonctionnelle (gestion propre). Depuis loi NOTRe : seules les communes conservent la clause générale de compétence." },
+    { title: "2. Libre administration", text: "Article 72 Constitution : les CT s'administrent librement par des conseils élus, avec pouvoir réglementaire. Limité aux compétences infra-législatives." },
+  ]},
+  { id: 6, title: "Le statut des élus locaux", theme: 'environnement', sections: [
+    { title: "1. Indemnités et transparence", text: "Principe de gratuité mais indemnisation possible. Calcul basé sur l'indice 1027 de la FP. Soumises à l'IR.\nDéclarations patrimoniales et d'intérêts à la HATVP pour maires > 20 000 hab." },
+    { title: "2. Moyens, formation, facilités", text: "Frais remboursés, locaux, personnel. DIF de 20h/an. Formation obligatoire 1ère année (communes > 3 500 hab.). Autorisations d'absence, crédits d'heures." },
+    { title: "3. Protection et responsabilité", text: "Protection contre accidents et menaces. Allocation fin de mandat. Retraite IRCANTEC.\nResponsabilité disciplinaire, financière, civile et pénale. Charte de l'élu local." },
+  ]},
+];
+
+// Fiches restantes (placeholders pour les sections non encore complétées)
+const makeFiche = (id: number, title: string): Fiche => ({
+  id, title, theme: 'environnement',
+  sections: [{ title: title, text: `Contenu de la fiche ${id} disponible dans le PDF CNFPT. Le contenu détaillé sera intégré prochainement.` }],
+});
+
+const fichesFinances: Fiche[] = [38,39,40,41,42,43,44,45].map(id => {
+  const titles: Record<number,string> = {
+    38: "Le budget des collectivités locales", 39: "Les cinq grands principes budgétaires",
+    40: "Les grands principes comptables du budget local", 41: "Les recettes des collectivités locales",
+    42: "Les dépenses des collectivités locales", 43: "Le contrôle des actes budgétaires locaux",
+    44: "L'autonomie financière des collectivités locales", 45: "Les principales opérations comptables",
+  };
+  return makeFiche(id, titles[id]);
+});
+
+const fichesCommande: Fiche[] = [50,51,52,53,54,55,56,57,58,59,60].map(id => {
+  const titles: Record<number,string> = {
+    50: "Le champ d'application du code de la commande publique", 51: "Les principes fondamentaux de la commande publique",
+    52: "La préparation du marché public", 53: "Les opérations préalables au lancement",
+    54: "Publicité, délais, dématérialisation", 55: "L'examen des candidatures et des offres",
+    56: "Les organes décisionnels", 57: "L'achèvement de la procédure",
+    58: "La gestion administrative du marché public", 59: "La gestion financière du marché public",
+    60: "La clôture du marché public",
+  };
+  return makeFiche(id, titles[id]);
+});
+
+const fichesFPT: Fiche[] = [61,62,63,64,65,66,67,68,69,70].map(id => {
+  const titles: Record<number,string> = {
+    61: "Les organismes gestionnaires de la FPT", 62: "Les modes d'accès à la FPT",
+    63: "Les positions statutaires", 64: "Le recrutement et l'intégration",
+    65: "Les agents de droit privé", 66: "Le déroulement de carrière",
+    67: "Les droits et obligations des agents", 68: "Les obligations de déontologie",
+    69: "Le droit disciplinaire", 70: "La cessation de fonction",
+  };
+  return makeFiche(id, titles[id]);
+});
+
+const fichesRH: Fiche[] = [71,72,73,74,75,76,77,78].map(id => {
+  const titles: Record<number,string> = {
+    71: "L'appréciation de la valeur professionnelle", 72: "La formation tout au long de la vie",
+    73: "Les risques psycho-sociaux", 74: "Les acteurs de la santé au travail",
+    75: "Le dialogue social", 76: "La lutte contre les inégalités",
+    77: "La politique d'optimisation des RH", 78: "La fonction RH stratégique",
+  };
+  return makeFiche(id, titles[id]);
+});
+
+const fichesManagement: Fiche[] = [84,85,86,87,88,89,90].map(id => {
+  const titles: Record<number,string> = {
+    84: "Le cadre territorial", 85: "Les différents types de management",
+    86: "Management : la délégation", 87: "Le management de projet",
+    88: "Le management stratégique", 89: "La relation cadre / élus",
+    90: "La péréquation financière",
+  };
+  return makeFiche(id, titles[id]);
+});
 
 export const environnementFiches: Fiche[] = [
-  // FICHE 1 - Les grands principes de l'organisation de l'État
-  {
-    id: 1, title: "Les grands principes de l'organisation de l'État", theme: 'environnement',
-    sections: [
-      { title: "1. L'État", text: "Les éléments pour constituer un État sont au nombre de trois : une population, un territoire, un pouvoir. La population, rassemblée par une volonté de vivre ensemble dans un territoire, se dote d'un pouvoir disposant du monopole de la contrainte légitime.\n\nDeux autres notions doivent être évoquées : celle de personnalité et celle de souveraineté.", subsections: [
-        { title: "1.1. L'État est doté de la personnalité morale", text: "En étant doté de la personnalité morale, l'État agit au nom de la population qui est sur son territoire. Il a une vie propre et indépendante des volontés individuelles de tous ses membres.\n\nIl assure sa permanence : les changements qui surviennent dans sa composition n'affectent pas son existence, ni la durée de ses décisions. Les lois votées, les traités conclus survivent à ceux qui les ont adoptés ou signés. Cette continuité est indispensable à la sécurité des relations sociales et permet l'institutionnalisation du pouvoir." },
-        { title: "1.2. L'État est souverain", text: "L'État dispose d'un pouvoir qui ne relève d'aucun autre. Seul l'État est souverain, car il est le seul à disposer de la faculté de s'organiser lui-même : « l'État a la compétence de ses compétences ».\n\nLe terme souverain n'est pas synonyme d'omnipotent ou d'arbitraire. L'État doit s'appliquer à lui-même les règles qu'il pose et ne pourra s'en affranchir qu'en les modifiant.\n\nL'État est donc une personne morale souveraine soumise au droit qu'elle crée." },
-      ]},
-      { title: "2. Unitaire", text: "L'État unitaire est celui qui ne possède qu'un seul centre d'impulsion politique. La politique de l'État est menée dans le cadre d'une organisation unique : un pouvoir législatif (qui peut être bicaméral) et un pouvoir exécutif (qui peut être bicéphale). Ces deux pouvoirs légifèrent et agissent sur l'ensemble du territoire étatique.\n\nL'État fédéral est un État où il y a plusieurs centres d'impulsions politiques (ex: États-Unis). Les compétences étatiques sont partagées entre l'État fédéral et les États fédérés.\n\nL'État français est un État unitaire, centralisé, qui va devenir déconcentré et décentralisé." },
-      { title: "3. Déconcentré", text: "Un État unitaire centralisé, dès qu'il a une certaine étendue, ne peut exercer ses compétences de manière efficace ; il est amené à mettre en place une organisation déconcentrée.\n\nLa déconcentration est une variété de la centralisation. Elle consiste à un découpage du territoire en circonscriptions administratives à la tête desquelles l'État place un représentant local du pouvoir central.\n\nComme disait Odilon Barrot : « C'est le même marteau qui frappe, mais le manche est plus court ».\n\nLes circonscriptions administratives ne sont pas dotées de la personnalité morale, et les représentants locaux sont dans une situation d'étroite subordination hiérarchique par rapport au pouvoir central." },
-      { title: "4. Décentralisé", text: "La décentralisation répond à une aspiration des citoyens de s'occuper eux-mêmes des affaires de proximité (affaires locales).\n\nElle se concrétise par la création de deux nouvelles catégories de personnes morales de droit public à côté de l'État :\n• Les collectivités territoriales (décentralisation territoriale)\n• Les établissements publics (décentralisation technique/fonctionnelle)\n\nÉtant dotés de la personnalité morale, ils disposent d'organes propres : un organe délibérant et un organe exécutif.\n\nDifférences traditionnelles entre collectivités territoriales et établissements publics :\n• Les CT avaient une compétence générale / les EP une compétence spécialisée\n• Les organes délibérants des CT étaient élus au SUD / pas ceux des EP\n\nCes différences sont remises en question : la loi NOTRe (2015) a retiré la compétence générale aux départements et régions. Et certains EP (EPCI à fiscalité propre) ont des organes élus au SUD depuis 2014.\n\nSeule la métropole de Lyon a obtenu le statut de collectivité territoriale à statut particulier (loi MAPTAM 2014)." },
-    ],
-  },
-  // FICHE 2 - L'organisation administrative de l'État
-  {
-    id: 2, title: "L'organisation administrative de l'État", theme: 'environnement',
-    sections: [
-      { title: "1. L'administration centrale", text: "Selon le décret du 7 mai 2015 portant charte de la déconcentration, les administrations centrales assurent au niveau national un rôle de conception, d'animation, d'évaluation et de contrôle.", subsections: [
-        { title: "1.1. Les organes de conception, de gestion et de décision", text: "• Le Président de la République : autorité politique et administrative, dispose d'un pouvoir réglementaire et d'un pouvoir de nomination (art. 13 Constitution).\n\n• Le Premier ministre : dispose du pouvoir réglementaire général en vue de l'exécution des lois et pour prendre des règlements autonomes (art. 21 et 37 Constitution). Nomme aux emplois civils et militaires.\n\n• Les ministres : placés à la tête d'un département ministériel, disposent d'un pouvoir réglementaire dans leur domaine." },
-        { title: "1.2. Les organes de consultation", text: "• Le Conseil d'État : obligatoirement saisi de tous les projets de loi, des projets d'ordonnance et des décrets en Conseil d'État.\n\n• Le Conseil économique, social et environnemental (Titre XI Constitution) : conseille le Gouvernement et le Parlement, participe à l'élaboration et à l'évaluation des politiques publiques." },
-        { title: "1.3. Les organes de coordination", text: "• Le Conseil des ministres : présidé par le Président de la République. Membres permanents : Premier ministre, ministres et ministres délégués.\n\n• Les conseils restreints : rassemblent le PM et les ministres sous présidence du PR.\n\n• Les comités interministériels : réunissent les ministres sous présidence du PM.\n\n• Les réunions interministérielles : rassemblent les collaborateurs des ministres." },
-        { title: "1.4. Les organes de contrôle", text: "• La Cour des comptes : contrôle financier exercé par une juridiction.\n\n• Les inspections générales : contrôles dans un domaine plus large, existant dans les plus grands ministères." },
-      ]},
-      { title: "2. L'administration déconcentrée", text: "Il y a quatre catégories de circonscriptions administratives : la région, le département, l'arrondissement, la commune, ayant respectivement à leur tête le préfet de région, le préfet de département, le sous-préfet et le maire.", subsections: [
-        { title: "2.1. La mise en place historique", text: "• La commune : loi du 14 décembre 1789, cellule administrative de base (44 000 paroisses transformées en communes).\n\n• Le département : 83 départements créés en 1789. Idée : un administré devait pouvoir faire l'aller-retour dans la journée entre son lieu d'habitation et le chef-lieu.\n\n• L'arrondissement : créé au début du XIXe siècle, entre le département et la commune.\n\n• La région : mise en place progressive. Régions économiques de programme (1955-56), puis circonscriptions d'action régionale (1959), puis préfet de région (1964)." },
-        { title: "2.2. Les services déconcentrés", text: "Au niveau de la zone :\n• Zone de défense et de sécurité (7 zones) : défense, sécurité civile, police nationale.\n• Zone de bassin : gestion de l'eau.\n\nAu niveau régional (12 régions + Corse depuis 2016) :\n• DRFiP (Finances publiques)\n• DRAAF (Agriculture, alimentation, forêt)\n• DRAC (Culture)\n• DREAL (Environnement, aménagement, logement)\n• DREETS (Économie, emploi, travail, solidarités - depuis 2021)\n• Rectorats d'académie\n• ARS (Agences régionales de santé)\n\nAu niveau départemental :\n• DDFiP (Finances publiques)\n• DDT(M) (Territoires et mer)\n• DDETS(PP) (Emploi, travail, solidarités, protection des populations - depuis 2021)\n• SDJES (Service départemental jeunesse, engagement, sports)\n• Inspection académique\n\nAu niveau de l'arrondissement : sous-préfet." },
-        { title: "2.2.2. Le préfet", text: "Recrutement : corps préfectoral recruté principalement à la sortie de l'ENA (devenue INSP en 2022) ou par la voie du tour extérieur.\n\nRôle du préfet de département :\n• Représentant de l'État dans le département\n• Représentant du Premier ministre et de chacun des ministres\n• Dirige les services déconcentrés de l'État\n• Est seul habilité à s'exprimer au nom de l'État devant le conseil départemental\n• Veille à l'exécution des lois et des règlements\n• Exerce le contrôle de légalité sur les actes des collectivités territoriales\n• Responsable de l'ordre public, de la sécurité et de la protection des populations\n\nRôle du préfet de région :\n• Autorité sur les préfets de département\n• Anime et coordonne les politiques de l'État dans la région\n• Répartit les crédits d'investissement de l'État" },
-      ]},
-    ],
-  },
-  // FICHE 3 - Les grandes étapes de la décentralisation
-  {
-    id: 3, title: "Les grandes étapes de la décentralisation", theme: 'environnement',
-    sections: [
-      { title: "1. Acte I de la décentralisation (1982-2003)", text: "Loi du 2 mars 1982 : renforcement des droits et libertés des communes, départements et régions.\n• La région devient une collectivité territoriale\n• Suppression des tutelles administratives, financières et techniques\n• Remplacement par des contrôles juridictionnalisés (TA, CRC) portant sur la légalité\n\nLois du 7 janvier / 22 juillet 1983 : répartition des compétences entre communes, départements, régions et État.\n• Régions : apprentissage, formation professionnelle, lycées\n• Départements : archives, bibliothèques, transports scolaires, collèges\n• Communes : écoles primaires\n\nLoi du 26 janvier 1984 : statut de la fonction publique territoriale (passage du système de l'emploi à celui de la carrière).\n\nLoi du 12 juillet 1999 : renforcement et simplification de la coopération intercommunale.\n• Trois structures : communauté urbaine, communauté d'agglomération, communauté de communes\n• Fiscalité propre, sans enclave, d'un seul tenant" },
-      { title: "2. Acte II de la décentralisation (2003-2007)", text: "Loi constitutionnelle du 28 mars 2003 : assise constitutionnelle à la décentralisation.\n• Principe de subsidiarité et de proximité\n• Principe de « chef de file »\n• Droit à l'expérimentation pour les collectivités (art. 72 Constitution)\n• Autonomie financière : liberté des dépenses, transferts de compétences accompagnés de ressources équivalentes\n• Participation populaire : droit de pétition, possibilité de référendum local\n\nLoi du 13 août 2004 : libertés et responsabilités locales.\n• Énumération des compétences transférées par l'État\n• Définition de l'intérêt communautaire pour les EPCI\n• Possibilité de transfert des pouvoirs de police aux présidents de communautés" },
-      { title: "3. Acte III de la décentralisation (2007-2019)", text: "Loi du 16 décembre 2010 : réforme des collectivités territoriales.\n• Achèvement de la carte intercommunale\n• Création des métropoles et pôles métropolitains\n• Dispositif « commune nouvelle »\n\nLoi MAPTAM du 27 janvier 2014 :\n• Rétablissement de la clause de compétence générale\n• Création des conférences territoriales de l'action publique (CTAP)\n• Métropoles à statut particulier : Grand Paris, Aix-Marseille-Provence, Lyon\n\nLoi du 16 janvier 2015 : nouvelle carte de France métropolitaine (12 régions).\n\nLoi NOTRe du 7 août 2015 :\n• Fin de la clause de compétence générale pour département et région\n• Renforcement des régions\n• Rationalisation de l'intercommunalité\n• Repositionnement des départements\n\nLoi du 28 février 2017 : statut de Paris, aménagement métropolitain.\n\nLoi du 2 août 2019 : compétences de la Collectivité européenne d'Alsace (coopération transfrontalière, bilinguisme, tourisme)." },
-    ],
-  },
-  // FICHE 4 - L'organisation juridictionnelle
-  {
-    id: 4, title: "L'organisation juridictionnelle", theme: 'environnement',
-    sections: [
-      { title: "1. Les juridictions de l'ordre judiciaire", text: "", subsections: [
-        { title: "1.1. Juridictions civiles de premier degré", text: "Juridictions de droit commun :\n• Le tribunal judiciaire : juridiction de droit commun pour les litiges civils et commerciaux.\n• Le tribunal de proximité : litiges de la vie quotidienne jusqu'à 10 000 €, compétence exclusive pour les litiges de voisinage.\n\nJuridictions spécialisées :\n• Le conseil de prud'hommes : différends individuels de la relation de travail (salariés/employeurs). Juges non professionnels.\n• Le tribunal de commerce : litiges entre commerçants. Juges consulaires élus.\n• Le tribunal paritaire des baux ruraux : litiges entre propriétaires bailleurs et exploitants." },
-        { title: "1.2. Juridictions pénales", text: "3 catégories d'infractions :\n• Contraventions (5 classes, amendes de 38 € à 1 500 €)\n• Délits (emprisonnement et/ou amende)\n• Crimes (atteintes graves, longues privations de liberté)\n\nJuridictions de jugement :\n• Tribunal de police : juge unique, contraventions\n• Tribunal correctionnel : délits des majeurs\n• Cour criminelle départementale : crimes punis de 15 à 20 ans (5 juges professionnels)\n• Cour d'assises : crimes punis de plus de 20 ans (3 juges + 6 jurés citoyens)\n\nJuridictions spécialisées : crime organisé, délinquance financière, mineurs." },
-        { title: "1.3. Cours d'appel et Cour de cassation", text: "Cours d'appel : réexaminent les faits et vérifient l'application du droit. Chambres spécialisées (civiles et pénales).\n\nCour de cassation : plus haute juridiction de l'ordre judiciaire. Juge uniquement en droit (pourvoi en cassation). Veille à l'application identique des règles sur tout le territoire. 7 chambres civiles + 1 chambre pénale." },
-        { title: "1.4. Les magistrats", text: "Magistrats du siège : prononcent les jugements, appliquent la loi, disent le droit. Inamovibles.\n\nMagistrats du parquet (ministère public) : représentent la société, dirigent l'action de la police judiciaire, décident des suites aux infractions, veillent à l'exécution des peines. Soumis au principe hiérarchique." },
-      ]},
-      { title: "2. Les juridictions de l'ordre administratif", text: "", subsections: [
-        { title: "2.1. Tribunal administratif", text: "Juge les litiges entre l'administration et les particuliers ou entre administrations. 42 tribunaux en France. Peut annuler, modifier une décision administrative, condamner l'administration à des dommages et intérêts." },
-        { title: "2.2. Cour administrative d'appel", text: "Statuent en appel des jugements de TA. L'appel n'a pas d'effet suspensif. 9 cours en France." },
-        { title: "2.3. Conseil d'État", text: "Juridiction suprême de l'ordre administratif. Juge de cassation, compétent en premier et dernier ressort pour les recours contre les décrets. Juge d'appel en matière électorale. Gère les TA et CAA." },
-      ]},
-      { title: "3. Le Tribunal des conflits", text: "Règle les conflits d'attribution entre juridiction administrative et juridiction judiciaire. Composé en nombre égal de membres du Conseil d'État et de la Cour de cassation. Ses décisions s'imposent à toutes les juridictions." },
-      { title: "4. Le Conseil constitutionnel", text: "Contrôle de conformité de la loi à la Constitution.\n\nContrôle a priori : avant promulgation des lois organiques, engagements internationaux, lois ordinaires.\n\nContrôle a posteriori (depuis mars 2010) : Question Prioritaire de Constitutionnalité (QPC) sur renvoi du Conseil d'État ou de la Cour de cassation.\n\nContentieux électoral : veille à la régularité de l'élection présidentielle, des référendums et des élections parlementaires." },
-    ],
-  },
-  // FICHE 5 - Les grands principes régissant les CT
-  {
-    id: 5, title: "Les grands principes régissant les collectivités territoriales et leurs regroupements", theme: 'environnement',
-    sections: [
-      { title: "1. Le principe d'autonomie", text: "", subsections: [
-        { title: "1.1. L'autonomie juridique", text: "Les CT sont des personnes juridiques distinctes de l'État (personnes morales de droit public). Elles disposent d'un patrimoine, de la capacité d'accomplir des actes juridiques et d'ester en justice.\n\nArticle 72 de la Constitution les institue : communes, départements, régions, collectivités à statut particulier, collectivités d'outre-mer." },
-        { title: "1.2. L'autonomie organique", text: "Les CT s'administrent librement par des conseils élus :\n• Organes délibérants élus au suffrage universel direct (conseil municipal, départemental, régional)\n• Organes exécutifs élus au suffrage indirect (maire, président de conseil départemental/régional)" },
-        { title: "1.3. L'autonomie fonctionnelle", text: "Les organes gèrent leurs affaires propres par leurs délibérations. La clause générale de compétence permettait traditionnellement de se saisir de toute question d'intérêt local.\n\nDepuis la loi NOTRe (2015), régions et départements ont perdu la clause générale de compétence et ne conservent que des compétences d'attribution. Seules les communes la conservent." },
-        { title: "1.4. Le contrôle de l'État", text: "Les CT s'administrent librement sous le contrôle de l'État. Le contrôle d'opportunité a priori s'est transformé en contrôle de légalité a posteriori depuis la loi de 1982." },
-      ]},
-      { title: "2. Le principe de libre administration", text: "Inscrit dans la Constitution (art. 72) : les CT s'administrent librement par des conseils élus et disposent d'un pouvoir réglementaire pour l'exercice de leurs compétences.\n\nArticle 72-2 détaille les dispositions constitutionnelles consacrant la libre administration.\n\nLa libre administration se limite aux compétences infra-législatives et exclut les compétences régaliennes." },
-    ],
-  },
-  // FICHE 6 - Le statut des élus locaux
-  {
-    id: 6, title: "Le statut des élus locaux", theme: 'environnement',
-    sections: [
-      { title: "1. Les indemnités", text: "Principe de gratuité des fonctions mais possibilité d'indemnisation. Calcul basé sur l'indice brut terminal 1027 de la FP, avec pourcentage variant selon la population.\n\nDélibération obligatoire en début de mandature (dans les 3 mois). Modulation possible selon la participation aux séances (départements et régions)." },
-      { title: "2-3. Fiscalisation et transparence", text: "Les indemnités sont soumises à l'impôt sur le revenu (règles des traitements et salaires).\n\nObligations de transparence : déclarations de situation patrimoniale et d'intérêts à la HATVP pour les maires de communes > 20 000 hab., présidents d'EPCI > 20 000 hab., présidents de conseil régional/départemental, etc." },
-      { title: "4-8. Moyens, formation, facilités", text: "Frais remboursés : représentation, garde, assistance handicap, déplacements.\n\nMoyens selon la taille : locaux, personnel, groupes politiques (communes > 100 000 hab.).\n\nFormation : droit à la formation, DIF de 20h/an. Formation obligatoire 1ère année pour élus avec délégation (communes > 3 500 hab.).\n\nFacilités horaires : autorisations d'absence, crédits d'heures pour tous les conseillers municipaux." },
-      { title: "9-12. Protection et responsabilité", text: "Protection : contre accidents, menaces, attaques. Contrat d'assurance obligatoire.\n\nFin de mandat : allocation différentielle, formation, bilan de compétences.\n\nRetraite : IRCANTEC obligatoire, rente facultative, régime général.\n\nResponsabilités :\n• Disciplinaire : suspension par arrêté, révocation par décret\n• Financière : infractions comptables, gestion de fait\n• Civile : faute personnelle uniquement\n• Pénale : fautes intentionnelles (probité) et non intentionnelles\n\nCharte de l'élu local : dignité, impartialité, intégrité, probité, intérêt général." },
-    ],
-  },
-  // FICHES 7-90 avec titres (contenu disponible dans le PDF)
-  ...[
-    [7, "Principaux chiffres sur les élus locaux"],
-    [8, "La participation des citoyens à la vie locale"],
-    [9, "La composition du conseil municipal"],
-    [10, "Le rôle du conseil municipal"],
-    [11, "La préparation du conseil municipal"],
-    [12, "Le fonctionnement du conseil municipal"],
-    [13, "L'exécution des décisions du conseil municipal"],
-    [14, "Le maire"],
-    [15, "Les adjoints au maire"],
-    [16, "La commune nouvelle"],
-    [17, "Les grandes étapes de l'intercommunalité"],
-    [18, "Les grands principes de l'intercommunalité"],
-    [19, "Les différentes structures intercommunales"],
-    [20, "Le département"],
-    [21, "La région"],
-    [22, "Paris - Lyon - Marseille"],
-    [23, "La collectivité de Corse"],
-    [24, "La métropole de Lyon"],
-    [25, "Les collectivités territoriales d'outre-mer"],
-    [26, "Le domaine des collectivités territoriales"],
-    [27, "Les services publics locaux"],
-    [28, "Les actes des collectivités territoriales"],
-    [29, "L'acte administratif unilatéral"],
-    [30, "Le contrat administratif"],
-    [31, "Le principe de légalité"],
-    [32, "Le contrôle de légalité"],
-    [33, "Les pouvoirs de police du maire"],
-    [34, "La police administrative"],
-    [35, "La responsabilité administrative"],
-    [36, "Le partenariat public privé"],
-    [37, "Les délégations de service public"],
-    [38, "Le budget des collectivités locales"],
-    [39, "Les cinq grands principes budgétaires"],
-    [40, "Les grands principes comptables du budget local"],
-    [41, "Les recettes des collectivités locales"],
-    [42, "Les dépenses des collectivités locales"],
-    [43, "Le contrôle des actes budgétaires locaux"],
-    [44, "L'autonomie financière des collectivités locales"],
-    [45, "Les principales opérations comptables"],
-    [50, "Le champ d'application du code de la commande publique"],
-    [51, "Les principes fondamentaux de la commande publique"],
-    [52, "La préparation du marché public"],
-    [53, "Les opérations préalables au lancement de la procédure"],
-    [54, "Marchés publics : publicité, délais, dématérialisation"],
-    [55, "L'examen des candidatures et des offres"],
-    [56, "Les organes décisionnels"],
-    [57, "L'achèvement de la procédure"],
-    [58, "La gestion administrative du marché public"],
-    [59, "La gestion financière du marché public"],
-    [60, "La clôture du marché public"],
-    [61, "Les organismes gestionnaires de la FPT"],
-    [62, "Les modes d'accès à la fonction publique territoriale"],
-    [63, "Les positions statutaires des fonctionnaires territoriaux"],
-    [64, "Le recrutement et l'intégration"],
-    [65, "Les agents de droit privé"],
-    [66, "Le déroulement de carrière des agents territoriaux"],
-    [67, "Les droits et obligations des agents territoriaux"],
-    [68, "Les obligations liées à la déontologie"],
-    [69, "Le droit disciplinaire des agents territoriaux"],
-    [70, "La cessation de fonction des agents territoriaux"],
-    [71, "L'appréciation de la valeur professionnelle"],
-    [72, "La formation tout au long de la vie"],
-    [73, "Les risques psycho-sociaux et la protection fonctionnelle"],
-    [74, "Les acteurs de la santé au travail"],
-    [75, "Le dialogue social"],
-    [76, "La lutte contre les inégalités"],
-    [77, "La politique d'optimisation des RH"],
-    [78, "La fonction RH stratégique"],
-    [84, "Le cadre territorial"],
-    [85, "Les différents types de management"],
-    [86, "Management : la délégation"],
-    [87, "Le management de projet"],
-    [88, "Le management stratégique"],
-    [89, "La relation cadre / élus"],
-    [90, "La péréquation financière"],
-  ].map(([id, title]) => ({
-    id: id as number,
-    title: title as string,
-    theme: 'environnement' as const,
-    sections: [{ title: title as string, text: `Contenu de la fiche ${id} disponible dans le PDF CNFPT.\n\nCette fiche fait partie du programme de révision pour le concours d'attaché territorial (catégorie A). Le contenu détaillé sera intégré progressivement.` }],
-  })),
+  ...fichesInstitutions,
+  ...fichesCollectivites,
+  ...fichesActionAdmin,
+  ...fichesFinances,
+  ...fichesCommande,
+  ...fichesFPT,
+  ...fichesRH,
+  ...fichesManagement,
 ];

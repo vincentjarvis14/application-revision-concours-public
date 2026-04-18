@@ -136,12 +136,18 @@ function formatContent(text) {
     inList = false;
   };
 
-  for (const raw of lines) {
-    const line = raw.trim();
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
 
     if (!line) {
-      flushList();
-      flushPara();
+      // Ne couper que si la prochaine ligne non-vide commence par majuscule ou chiffre
+      // (évite les coupures parasites au milieu d'une phrase)
+      const next = lines.slice(i + 1).find(l => l.trim());
+      const nextTrim = next ? next.trim() : '';
+      const isRealBreak = !nextTrim
+        || /^[A-ZÀÂÄÉÈÊËÎÏÔÙÛÜ\d]/.test(nextTrim)
+        || /^[•·]/.test(nextTrim);
+      if (isRealBreak) { flushList(); flushPara(); }
       continue;
     }
 

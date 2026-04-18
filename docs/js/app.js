@@ -85,15 +85,24 @@ function renderAll() {
   switchPage(state.currentPage);
 }
 
+// ===== Helpers groupes =====
+function getGroupForChapter(chapterId) {
+  if (!courses || !courses.groups) return null;
+  return courses.groups.find(g => g.chapterIds.includes(chapterId)) || null;
+}
+
 // ===== Header =====
 function updateHeader() {
   if (!courses) return;
   const ch = courses.chapters[state.chapterIndex];
+  const grp = getGroupForChapter(ch.id);
   document.getElementById('header-title').textContent = ch.title;
   document.getElementById('chapter-counter').textContent =
     `${state.chapterIndex + 1} / ${courses.chapters.length}`;
   const pct = ((state.chapterIndex + 1) / courses.chapters.length) * 100;
   document.getElementById('chapter-progress').style.width = pct + '%';
+  const grpEl = document.getElementById('header-group');
+  if (grpEl) grpEl.textContent = grp ? grp.title : '';
 }
 
 // ===== Home / Cours =====
@@ -198,14 +207,21 @@ function renderQuizSetup() {
   if (!courses) return;
   const container = document.getElementById('quiz-content');
 
-  const chipsHTML = courses.chapters.map((ch, i) => {
-    const active = state.quizSelectedChapters.includes(i);
-    return `<button
-      class="quiz-chip ${active ? 'active' : ''}"
-      onclick="toggleChapterChip(${i})"
-      data-chip="${i}">
-      <span class="chip-num">${i + 1}</span>${ch.title}
-    </button>`;
+  const groups = courses.groups || [{ id: 'all', title: '', chapterIds: courses.chapters.map(c => c.id) }];
+  const chipsHTML = groups.map(grp => {
+    const chips = courses.chapters
+      .map((ch, i) => ({ ch, i }))
+      .filter(({ ch }) => grp.chapterIds.includes(ch.id))
+      .map(({ ch, i }) => {
+        const active = state.quizSelectedChapters.includes(i);
+        return `<button
+          class="quiz-chip ${active ? 'active' : ''}"
+          onclick="toggleChapterChip(${i})"
+          data-chip="${i}">
+          <span class="chip-num">${i + 1}</span>${ch.title}
+        </button>`;
+      }).join('');
+    return `<div class="quiz-group-wrap"><p class="quiz-group-label">${grp.title}</p><div class="quiz-chips-wrap">${chips}</div></div>`;
   }).join('');
 
   container.innerHTML = `
@@ -230,7 +246,7 @@ function renderQuizSetup() {
     <!-- Chips chapitres -->
     <div class="mb-2">
       <p class="text-xs text-gray-400 mb-2">Ou sélectionner un chapitre :</p>
-      <div class="quiz-chips-wrap">${chipsHTML}</div>
+      <div>${chipsHTML}</div>
       ${state.quizSelectedChapters.length > 0
         ? `<button class="text-xs text-teal-500 mt-2 underline" onclick="clearChapterSelection()">Tout désélectionner</button>`
         : ''}
@@ -447,22 +463,35 @@ function renderQuizResults() {
 function buildSommaire() {
   if (!courses) return;
   const list = document.getElementById('sommaire-list');
-  list.innerHTML = courses.chapters.map((ch, ci) => `
-    <div class="sommaire-chapter">
-      <button class="sommaire-chapter-btn ${ci === state.chapterIndex ? 'current' : ''}"
-              onclick="goToChapter(${ci})">
-        <span class="text-teal-500 font-mono text-xs">${String(ci + 1).padStart(2,'0')}</span>
-        ${ch.title}
-      </button>
-      <div>
-        ${ch.sections.map(s => `
-          <button class="sommaire-section-btn" onclick="goToChapter(${ci}, '${s.id}')">
-            ${s.title}
+  const groups = courses.groups || [{ id: 'all', title: '', chapterIds: courses.chapters.map(c => c.id) }];
+
+  list.innerHTML = groups.map(grp => {
+    const chaptersHTML = courses.chapters
+      .map((ch, ci) => ({ ch, ci }))
+      .filter(({ ch }) => grp.chapterIds.includes(ch.id))
+      .map(({ ch, ci }) => `
+        <div class="sommaire-chapter">
+          <button class="sommaire-chapter-btn ${ci === state.chapterIndex ? 'current' : ''}"
+                  onclick="goToChapter(${ci})">
+            <span class="text-teal-500 font-mono text-xs">${String(ci + 1).padStart(2,'0')}</span>
+            ${ch.title}
           </button>
-        `).join('')}
+          <div>
+            ${ch.sections.map(s => `
+              <button class="sommaire-section-btn" onclick="goToChapter(${ci}, '${s.id}')">
+                ${s.title}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    return `
+      <div class="sommaire-group">
+        <p class="sommaire-group-label">${grp.title}</p>
+        ${chaptersHTML}
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 function openDrawer() {

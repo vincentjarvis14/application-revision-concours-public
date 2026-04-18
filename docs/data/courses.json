@@ -1,5 +1,28 @@
 {
   "title": "Attaché Territorial — Révision Concours",
+  "groups": [
+    {
+      "id": "env",
+      "title": "Environnement territorial",
+      "chapterIds": [
+        "env1",
+        "env2",
+        "env3",
+        "env4",
+        "env5",
+        "env6",
+        "env7",
+        "env8"
+      ]
+    },
+    {
+      "id": "urb",
+      "title": "Les politiques d'urbanisme",
+      "chapterIds": [
+        "urb1"
+      ]
+    }
+  ],
   "chapters": [
     {
       "id": "env1",

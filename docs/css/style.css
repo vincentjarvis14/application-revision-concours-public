@@ -123,6 +123,18 @@ body {
   flex: 1;
   padding-bottom: 24px;
 }
+.sommaire-group { margin-bottom: 4px; }
+.sommaire-group-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #0D9488;
+  padding: 10px 16px 4px;
+  margin: 0;
+  background: #F0FDFA;
+  border-top: 1px solid #CCFBF1;
+}
 .sommaire-chapter { border-bottom: 1px solid #f3f4f6; }
 .sommaire-chapter-btn {
   width: 100%;
@@ -207,15 +219,33 @@ body {
   transition: background 0.15s;
 }
 .hamburger-btn:hover { background: rgba(255,255,255,0.15); }
+.header-title-wrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.header-group {
+  font-size: 0.6rem;
+  font-weight: 500;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
 .header-title {
   font-size: 0.9rem;
   font-weight: 600;
-  flex: 1;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin: 0;
+  max-width: 100%;
 }
 .header-counter {
   font-size: 0.75rem;
@@ -479,6 +509,15 @@ body {
   color: #9ca3af;
   cursor: pointer;
   padding: 4px;
+}
+.quiz-group-wrap { margin-bottom: 12px; }
+.quiz-group-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #0D9488;
+  margin: 0 0 6px;
 }
 .quiz-chips-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
 .quiz-chip {

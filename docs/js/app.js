@@ -105,6 +105,67 @@ function updateHeader() {
   if (grpEl) grpEl.textContent = grp ? grp.title : '';
 }
 
+// ===== Formatage du contenu texte → HTML =====
+function formatContent(text) {
+  if (!text) return '';
+
+  // Normaliser les espaces multiples (artefact PDF)
+  text = text.replace(/[ \t]{2,}/g, ' ');
+
+  const lines = text.split('\n');
+  let html = '';
+  let paraLines = [];
+  let inList = false;
+
+  // Titres numérotés : "1. Titre" ou "1.1. Titre" (court, pas de ponctuation finale)
+  const h3Re = /^\d+\.\s+[A-ZÀÂÄÉÈÊËÎÏÔÙÛÜ]/;
+  const h4Re = /^\d+\.\d+\.?\s+\S/;
+  const bulletRe = /^[•·]\s*/;
+  const isTitle = (line, re) =>
+    re.test(line) && line.length < 130 && !line.endsWith(',') && !line.endsWith(';') && !line.endsWith(':');
+
+  const flushPara = () => {
+    if (!paraLines.length) return;
+    const joined = paraLines.join(' ').trim();
+    if (joined) html += `<p>${joined}</p>`;
+    paraLines = [];
+  };
+  const flushList = () => {
+    if (!inList) return;
+    html += '</ul>';
+    inList = false;
+  };
+
+  for (const raw of lines) {
+    const line = raw.trim();
+
+    if (!line) {
+      flushList();
+      flushPara();
+      continue;
+    }
+
+    if (isTitle(line, h4Re)) {
+      flushList(); flushPara();
+      html += `<h4>${line}</h4>`;
+    } else if (isTitle(line, h3Re)) {
+      flushList(); flushPara();
+      html += `<h3>${line}</h3>`;
+    } else if (bulletRe.test(line)) {
+      flushPara();
+      if (!inList) { html += '<ul>'; inList = true; }
+      html += `<li>${line.replace(bulletRe, '')}</li>`;
+    } else {
+      flushList();
+      paraLines.push(line);
+    }
+  }
+  flushList();
+  flushPara();
+
+  return html;
+}
+
 // ===== Home / Cours =====
 function renderHome() {
   if (!courses) return;
@@ -113,8 +174,8 @@ function renderHome() {
 
   const sectionsHTML = ch.sections.map(s => `
     <div id="section-${s.id}" class="lesson-card">
-      <p class="text-xs font-semibold text-teal-500 uppercase tracking-widest mb-2">${s.title}</p>
-      <p class="text-sm text-gray-700 leading-relaxed">${s.content}</p>
+      <p class="section-label">${s.title}</p>
+      <div class="section-content">${formatContent(s.content)}</div>
     </div>
   `).join('');
 

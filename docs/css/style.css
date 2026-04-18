@@ -335,6 +335,46 @@ body {
   padding: 18px;
   margin-bottom: 12px;
 }
+.section-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #0D9488;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 12px;
+}
+
+/* ===========================
+   SECTION CONTENT (rich text)
+   =========================== */
+.section-content { font-size: 0.875rem; color: #374151; line-height: 1.7; }
+.section-content h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 20px 0 6px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid #CCFBF1;
+}
+.section-content h4 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0D9488;
+  margin: 14px 0 4px;
+}
+.section-content p {
+  margin: 0 0 10px;
+}
+.section-content ul {
+  margin: 6px 0 10px 0;
+  padding-left: 18px;
+  list-style: disc;
+}
+.section-content li {
+  margin-bottom: 4px;
+}
+.section-content h3:first-child,
+.section-content h4:first-child { margin-top: 0; }
 
 /* ===========================
    CHAPTER NAV ARROWS
